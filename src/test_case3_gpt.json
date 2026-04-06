@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Modify User Preferences Performance Test — PATCH /api/v1/users/{user_id}/preferences",
+    "description": "Validate partial updates to user preferences via PATCH /api/v1/users/{user_id}/preferences under concurrent load, ensuring p95 response time and error rate meet targets, and that updates are reflected when preferences are retrieved via a subsequent GET.",
+    "corresponding NFR": "Modify User Preferences (Partial Update) — PATCH /api/v1/users/{user_id}/preferences must achieve p95 ≤ 400 ms for 95% of requests, error rate < 1%, simulate 50 concurrent PATCH operations, and changes must be visible via subsequent GET (Update Reflection).",
+    "preconditions": [
+      "User accounts must be pre-created and accessible.",
+      "Ensure valid auth tokens are used in the Authorization header.",
+      "Preferences must be enabled in the application."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/users/{user_id}/preferences",
+      "path_parameter": {
+        "user_id_example": "abc-123"
+      },
+      "method": "PATCH",
+      "load_type": "static",
+      "vus": 50,
+      "duration_s": 300,
+      "think_time_s": [
+        1,
+        3
+      ],
+      "headers": {
+        "Authorization": "Bearer <token>"
+      },
+      "payload_example": {
+        "email_notifications": false,
+        "language": "fr"
+      },
+      "update_reflection_check": "After each PATCH, perform a subsequent GET for the same user_id and verify the updated preference fields match the PATCH payload."
+    },
+    "metrics": [
+      {
+        "metric": "Max Response Time",
+        "target": 400,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Update Reflection",
+        "target": "Changes visible via subsequent GET",
+        "actual": null,
+        "unit": "pass/fail"
+      },
+      {
+        "metric": "Error Rate",
+        "target": 1,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Concurrent Users",
+        "target": 50,
+        "actual": null,
+        "unit": "concurrent PATCH operations"
+      }
+    ],
+    "test result": "TBD",
+    "notes": "Defaults applied where required to complete load profile: duration_s=300 and think_time_s=[1,3]. Update Reflection is validated by a subsequent GET read after each PATCH and comparing fields to the PATCH payload."
+  }
+]

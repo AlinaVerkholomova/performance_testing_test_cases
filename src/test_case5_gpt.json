@@ -1,0 +1,61 @@
+[
+  {
+    "name": "Delete User Account (Soft Delete) Performance Test — PATCH /api/v1/users/{user_id}",
+    "description": "Validate soft-deactivation of user accounts via PATCH /api/v1/users/{user_id} under concurrent load, ensuring max response time and success rate targets are met, and verifying data integrity (deactivated users do not appear in /users/active).",
+    "corresponding NFR": "Delete User Account (Write/Delete Operation) — PATCH /api/v1/users/{user_id} (soft delete by status update) must achieve Max Response Time ≤ 500 ms, Success Rate ≥ 98%, simulate 50 concurrent deactivations, and deactivated users must not appear in /users/active (Data Integrity).",
+    "preconditions": [
+      "Test users must exist and be in \"active\" status.",
+      "Authorization is required.",
+      "Users should not have pending transactions that prevent deletion."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/users/{user_id}",
+      "method": "PATCH",
+      "load_type": "static",
+      "vus": 50,
+      "duration_s": 180,
+      "think_time_s": [
+        1,
+        2
+      ],
+      "path_parameter": {
+        "user_id": "<existing_active_user_id>"
+      },
+      "headers": {
+        "Authorization": "Bearer <token>"
+      },
+      "payload_example": {
+        "status": "deactivated"
+      },
+      "data_integrity_check": "After each PATCH, verify the deactivated user does not appear in /users/active."
+    },
+    "metrics": [
+      {
+        "metric": "Max Response Time",
+        "target": 500,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Success Rate",
+        "target": 98,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Concurrent Users",
+        "target": 50,
+        "actual": null,
+        "unit": "concurrent deactivations"
+      },
+      {
+        "metric": "Data Integrity",
+        "target": "Deactivated users must not appear in /users/active",
+        "actual": null,
+        "unit": "pass/fail"
+      }
+    ],
+    "test result": "TBD",
+    "notes": "Defaults applied where required to define the load profile: duration_s=180 and think_time_s=[1,2]. Use a pool of pre-created active users and ensure each user_id is deactivated at most once per run to avoid repeat-operation failures. Data Integrity is validated by confirming deactivated users are absent from /users/active after the PATCH completes."
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "name": "TC-NFR-005: Delete User Account Performance Test (Soft Delete via PATCH)",
+  "description": "Verify that the user deactivation endpoint (/api/v1/users/{user_id}) meets performance requirements when processing concurrent PATCH requests that soft-delete user accounts by updating their status to 'deactivated'.",
+  "corresponding_NFR": "NFR-5: Delete User Account (Write/Delete Operation) — max response time ≤ 500 ms, success rate ≥ 98%, 50 concurrent deactivations supported, deactivated users must not appear in /api/v1/users/active.",
+  "preconditions": [
+    "Test users must exist in the database and be in 'active' status prior to test execution.",
+    "A valid authorization token must be included in the Authorization header.",
+    "Test users must not have any pending transactions that would prevent deactivation."
+  ],
+  "input_data": {
+    "endpoint": "/api/v1/users/{user_id}",
+    "http_method": "PATCH",
+    "operation_type": "Soft delete — status field update only",
+    "path_parameter": "user_id (unique per virtual user)",
+    "load_type": "50 concurrent PATCH operations",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+    },
+    "payload_example": {
+      "status": "deactivated"
+    }
+  },
+  "metrics": [
+    {
+      "metric_name": "Max Response Time",
+      "target_value": "≤ 500 ms",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Success Rate",
+      "target_value": "≥ 98%",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Concurrent Users",
+      "target_value": "50 concurrent deactivations",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Data Integrity",
+      "target_value": "Deactivated users absent from /users/active",
+      "actual_value": null
+    }
+  ],
+  "test_result": "PASS / FAIL (fill in after execution)",
+  "notes": "Each virtual user must target a distinct user_id to prevent conflicts. After each PATCH, issue a GET to /api/v1/users/active to confirm the deactivated user no longer appears (data integrity check). Pre-seed at least 50 active test users with no pending transactions before the run. Monitor for any partial update failures or race conditions under concurrent load."
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Update Product Details Performance Test — PUT /api/v1/products/{product_id}",
+    "description": "Validate full replace product updates via PUT /api/v1/products/{product_id} under concurrent update load, ensuring the 90th percentile response time and error rate meet targets, and that updates are consistent (reflected in subsequent GET reads).",
+    "corresponding NFR": "NFR 2: Update Product Details (Full Replace) — PUT /api/v1/products/{product_id} must achieve ≤ 700 ms for 90% of requests, error rate < 1%, simulate 30 concurrent PUT operations, and updates must reflect in subsequent GETs (data consistency).",
+    "preconditions": [
+      "Product IDs used during testing must already exist.",
+      "A test database snapshot with known product IDs should be prepared.",
+      "Authentication token (e.g., Authorization: Bearer <token>) must be included in headers."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/products/{product_id}",
+      "path_parameter": {
+        "product_id_example": 12345
+      },
+      "method": "PUT",
+      "load_type": "static",
+      "vus": 30,
+      "duration_s": 300,
+      "think_time_s": [
+        1,
+        2
+      ],
+      "headers": {
+        "Authorization": "Bearer <token>"
+      },
+      "payload_example": {
+        "name": "Wireless Headphones",
+        "description": "Noise-cancelling over-ear headphones",
+        "price": 79.99,
+        "stock": 50
+      },
+      "data_consistency_check": "After each PUT, perform a subsequent GET for the same product_id and verify the updated fields match the PUT payload."
+    },
+    "metrics": [
+      {
+        "metric": "Max Response Time",
+        "target": 700,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Data Consistency",
+        "target": "Updates must reflect in subsequent GETs",
+        "actual": null,
+        "unit": "pass/fail"
+      },
+      {
+        "metric": "Error Rate",
+        "target": 1,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Concurrent Updates",
+        "target": 30,
+        "actual": null,
+        "unit": "concurrent PUT operations"
+      }
+    ],
+    "test result": "TBD",
+    "notes": "Defaults applied where required to complete load profile: duration_s=300 and think_time_s=[1,2]. Data Consistency is validated by a subsequent GET read after each PUT and comparing fields to the PUT payload."
+  }
+]

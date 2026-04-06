@@ -1,0 +1,48 @@
+{
+  "name": "Delete User Account (Soft Delete) Performance Test",
+  "description": "Validate the performance and reliability of the user account soft delete operation when multiple users are deactivated concurrently.",
+  "corresponding NFR": "NFR 5: Delete User Account (Write/Delete Operation)",
+  "preconditions": [
+    "Test users must exist and be in active status.",
+    "Authorization credentials must be included in the request headers.",
+    "Users selected for testing must not have pending transactions that prevent deletion."
+  ],
+  "input data": {
+    "endpoint": "/api/v1/users/{user_id}",
+    "http method": "PATCH",
+    "path parameter": {
+      "user_id": "example_user_id"
+    },
+    "type of load": "Concurrent write operation simulating 50 simultaneous deactivations",
+    "headers": {
+      "Authorization": "Bearer <token>"
+    },
+    "payload example": {
+      "status": "deactivated"
+    }
+  },
+  "metrics": [
+    {
+      "metric name": "Max Response Time",
+      "target value": "≤ 500 ms",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Success Rate",
+      "target value": "≥ 98%",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Concurrent Users",
+      "target value": "Simulate 50 concurrent deactivations",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Data Integrity",
+      "target value": "Deactivated users must not appear in /users/active",
+      "actual value": "Pending"
+    }
+  ],
+  "test result": "Pending",
+  "notes": "Verify after execution that deactivated users are excluded from the active users endpoint and ensure test users are reset between test runs."
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "name": "Modify User Preferences Load Test (Partial Update)",
+    "description": "Test the /api/v1/users/{user_id}/preferences endpoint under 50 concurrent virtual users performing PATCH operations for 5 minutes to validate response time, update reflection, and error rate requirements for the partial user preferences update operation.",
+    "corresponding NFR": "The /api/v1/users/{user_id}/preferences endpoint must maintain a 95th percentile response time of ≤ 400 ms, an error rate of < 1%, and update reflection (changes must be visible via subsequent GET requests) under 50 concurrent PATCH operations.",
+    "preconditions": [
+      "The application is deployed and fully accessible in a stable test environment.",
+      "A pool of at least 50 unique user accounts is pre-created and accessible in the test environment prior to the test run.",
+      "The preferences feature is enabled and functional in the application configuration.",
+      "Valid Bearer authentication tokens are pre-generated for each virtual user and included in the Authorization header.",
+      "Tokens must have a TTL exceeding the total test duration.",
+      "Each virtual user is mapped to a distinct user_id to prevent conflicting concurrent writes on the same resource."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/users/{user_id}/preferences",
+      "method": "PATCH",
+      "path_parameter": "user_id (e.g., abc-123, drawn from pre-created user pool)",
+      "load_type": "ramp-up then steady-state",
+      "vus": 50,
+      "ramp_up_duration_s": 30,
+      "steady_state_duration_s": 300,
+      "think_time_s": [1, 2],
+      "headers": {
+        "Authorization": "Bearer <token>",
+        "Content-Type": "application/json"
+      },
+      "payload_example": {
+        "email_notifications": false,
+        "language": "fr"
+      }
+    },
+    "metrics": [
+      {
+        "metric": "Response Time (p95)",
+        "target": 400,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Error Rate",
+        "target": 1,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Update Reflection",
+        "target": 100,
+        "actual": null,
+        "unit": "% of changes visible via subsequent GETs"
+      },
+      {
+        "metric": "Concurrent Users",
+        "target": 50,
+        "actual": null,
+        "unit": "concurrent PATCH operations"
+      }
+    ],
+    "test result": "Pending",
+    "notes": "Ramp-up duration of 30 s is a proposed default to avoid a write spike at test start. Steady-state duration of 300 s is a proposed default. Update reflection validation requires a follow-up GET to /api/v1/users/{user_id}/preferences after each PATCH to assert that partial changes were persisted — this must be implemented as an assertion within the test script. Bearer tokens must be pre-generated with a TTL greater than the total test duration (ramp-up + steady-state = 330 s minimum)."
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "name": "TC-NFR-004: Retrieve Order History Performance Test (Read Operation)",
+  "description": "Verify that the order history endpoint (/api/v1/orders/history) meets performance requirements when executing concurrent POST requests with date-range and status filters to retrieve historical order data.",
+  "corresponding_NFR": "NFR-4: Retrieve Order History (Read Operation) — average response time ≤ 300 ms, P95 latency ≤ 600 ms, error rate < 0.5%, throughput ≥ 100 requests/sec.",
+  "preconditions": [
+    "Users must have historical order data available in the test database.",
+    "The time range specified in each request must include existing orders.",
+    "Read-only API — no authentication required, or use static tokens if applicable."
+  ],
+  "input_data": {
+    "endpoint": "/api/v1/orders/history",
+    "http_method": "POST",
+    "load_type": "Ramp-up to target throughput of ≥ 100 requests/sec",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer <static_token> (if required)"
+    },
+    "payload_example": {
+      "user_id": "user_789",
+      "start_date": "2024-01-01",
+      "end_date": "2024-12-31",
+      "status": "completed"
+    }
+  },
+  "metrics": [
+    {
+      "metric_name": "Avg Response Time",
+      "target_value": "≤ 300 ms",
+      "actual_value": null
+    },
+    {
+      "metric_name": "P95 Latency",
+      "target_value": "≤ 600 ms",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Error Rate",
+      "target_value": "< 0.5%",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Throughput",
+      "target_value": "≥ 100 requests/sec",
+      "actual_value": null
+    }
+  ],
+  "test_result": "PASS / FAIL (fill in after execution)",
+  "notes": "Use parameterized user_id values to simulate realistic read distribution and avoid cache skew. Ensure the test dataset covers the full date range (2024-01-01 to 2024-12-31) with completed orders. Monitor database read replica lag if applicable, as it may inflate response times under high throughput."
+}

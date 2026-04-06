@@ -1,0 +1,48 @@
+{
+  "name": "TC-NFR-003: Modify User Preferences Performance Test (Partial Update)",
+  "description": "Verify that the user preferences endpoint (/api/v1/users/{user_id}/preferences) meets performance requirements when processing concurrent PATCH requests that partially update user preference records.",
+  "corresponding_NFR": "NFR-3: Modify User Preferences (Partial Update) — max response time ≤ 400 ms at 95th percentile, preference changes visible via subsequent GETs, error rate < 1%, 50 concurrent PATCH operations supported.",
+  "preconditions": [
+    "User accounts must be pre-created and accessible in the test environment.",
+    "Valid authentication tokens must be included in the Authorization header for all requests.",
+    "The preferences feature must be enabled in the application configuration."
+  ],
+  "input_data": {
+    "endpoint": "/api/v1/users/{user_id}/preferences",
+    "http_method": "PATCH",
+    "path_parameter": "user_id (e.g., abc-123)",
+    "load_type": "50 concurrent PATCH operations",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+    },
+    "payload_example": {
+      "email_notifications": false,
+      "language": "fr"
+    }
+  },
+  "metrics": [
+    {
+      "metric_name": "Max Response Time (P95)",
+      "target_value": "≤ 400 ms",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Update Reflection",
+      "target_value": "Changes visible via subsequent GET",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Error Rate",
+      "target_value": "< 1%",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Concurrent Users",
+      "target_value": "50 concurrent PATCH operations",
+      "actual_value": null
+    }
+  ],
+  "test_result": "PASS / FAIL (fill in after execution)",
+  "notes": "Each virtual user should operate on a distinct user_id to avoid write conflicts. After each PATCH, issue a GET to /api/v1/users/{user_id}/preferences to confirm changes are reflected. Validate that unmodified preference fields remain unchanged (partial update integrity)."
+}

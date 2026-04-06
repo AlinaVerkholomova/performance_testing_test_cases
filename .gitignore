@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.Python
+pyvenv.cfg
+.venv/
+venv/
+env/
+.env
+.idea/
+.vscode/
+dist/
+build/
+/bin/
+/lib/

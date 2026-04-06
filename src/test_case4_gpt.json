@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Retrieve Order History Performance Test — POST /api/v1/orders/history",
+    "description": "Validate order history retrieval via POST /api/v1/orders/history using filtered queries, ensuring average response time, p95 latency, error rate, and throughput meet the NFR targets under a steady read load.",
+    "corresponding NFR": "Retrieve Order History (Read Operation) — POST /api/v1/orders/history must achieve Avg Response Time ≤ 300 ms, P95 Latency ≤ 600 ms, Error Rate < 0.5%, and Throughput ≥ 100 requests/sec.",
+    "preconditions": [
+      "Users must have historical order data.",
+      "Time range must include existing orders.",
+      "Read-only API; no authentication required or use static tokens."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/orders/history",
+      "method": "POST",
+      "load_type": "static",
+      "duration_s": 300,
+      "think_time_s": [
+        0.5,
+        1.5
+      ],
+      "target_throughput_rps": 100,
+      "payload_example": {
+        "user_id": "user_789",
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "status": "completed"
+      },
+      "auth_strategy": "No authentication required; if environment enforces auth, use static tokens."
+    },
+    "metrics": [
+      {
+        "metric": "Avg Response Time",
+        "target": 300,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "P95 Latency",
+        "target": 600,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Error Rate",
+        "target": 0.5,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Throughput",
+        "target": 100,
+        "actual": null,
+        "unit": "requests/sec"
+      }
+    ],
+    "test result": "TBD",
+    "notes": "Defaults applied where required to define the load profile: duration_s=300 and think_time_s=[0.5,1.5]. Throughput is driven to meet the NFR (≥100 requests/sec); concurrency is tuned in the load tool to sustain the target rate while validating latency/error requirements."
+  }
+]

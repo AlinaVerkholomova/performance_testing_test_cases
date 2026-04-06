@@ -1,0 +1,44 @@
+{
+  "name": "User Registration Performance Test",
+  "description": "Validate the performance of the user registration create operation under load.",
+  "corresponding NFR": "NFR 1: User Registration (Create Operation)",
+  "preconditions": [
+    "The email and username must be unique per test run (append timestamp or use random data).",
+    "Authentication is not required for this endpoint.",
+    "Application must be in a clean state (avoid email duplication)."
+  ],
+  "input data": {
+    "endpoint": "/api/v1/users/register",
+    "http method": "POST",
+    "type of load": "Concurrent load test with up to 100 users",
+    "payload example": {
+      "username": "test_user123",
+      "email": "test123@example.com",
+      "password": "StrongP@ssword!"
+    }
+  },
+  "metrics": [
+    {
+      "metric name": "Max Response Time",
+      "target value": "≤ 500 ms for 95% of requests",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Error Rate",
+      "target value": "< 1%",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Throughput",
+      "target value": "≥ 150 requests/sec",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Concurrent Users",
+      "target value": "Simulate up to 100 users",
+      "actual value": "Pending"
+    }
+  ],
+  "test result": "Pending",
+  "notes": "Ensure unique test data is generated for every request or test run to avoid duplicate registration failures affecting results."
+}

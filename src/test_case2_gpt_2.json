@@ -1,0 +1,51 @@
+{
+  "name": "Update Product Details Performance Test",
+  "description": "Validate system performance and stability when updating product details using a full replace operation under concurrent load.",
+  "corresponding NFR": "NFR 2: Update Product Details (Full Replace)",
+  "preconditions": [
+    "Product IDs used during testing must already exist.",
+    "A test database snapshot with known product IDs should be prepared.",
+    "Authentication token must be included in request headers (Authorization: Bearer <token>)."
+  ],
+  "input data": {
+    "endpoint": "/api/v1/products/{product_id}",
+    "http method": "PUT",
+    "path parameter": {
+      "product_id": 12345
+    },
+    "type of load": "Concurrent load test simulating 30 concurrent PUT operations",
+    "headers": {
+      "Authorization": "Bearer <token>"
+    },
+    "payload example": {
+      "name": "Wireless Headphones",
+      "description": "Noise-cancelling over-ear headphones",
+      "price": 79.99,
+      "stock": 50
+    }
+  },
+  "metrics": [
+    {
+      "metric name": "Max Response Time",
+      "target value": "≤ 700 ms for 90% of requests",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Data Consistency",
+      "target value": "Updates must reflect in subsequent GET requests",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Error Rate",
+      "target value": "< 1%",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Concurrent Updates",
+      "target value": "Simulate 30 concurrent PUT operations",
+      "actual value": "Pending"
+    }
+  ],
+  "test result": "Pending",
+  "notes": "Ensure the same product is not overwritten in conflicting ways during concurrency tests unless intentional. Validate updates through follow-up GET requests."
+}

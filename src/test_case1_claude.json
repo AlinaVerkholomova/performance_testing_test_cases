@@ -1,0 +1,56 @@
+[
+  {
+    "name": "User Registration Load Test",
+    "description": "Test the /api/v1/users/register endpoint under a concurrent load of 100 virtual users for 5 minutes to validate response time, error rate, and throughput requirements for the user registration (create) operation.",
+    "corresponding NFR": "The /api/v1/users/register endpoint must maintain a 95th percentile response time of ≤ 500 ms, an error rate of < 1%, and a throughput of ≥ 150 requests/sec under a concurrent load of 100 virtual users.",
+    "preconditions": [
+      "The application is deployed and fully accessible in a clean test environment.",
+      "Each virtual user generates a unique email and username per request (using timestamp or UUID suffix to avoid duplication).",
+      "Authentication is not required for this endpoint.",
+      "The database is in a clean state with no pre-existing conflicting usernames or emails.",
+      "No rate-limiting or bot-protection mechanisms are active that would block load test traffic."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/users/register",
+      "method": "POST",
+      "load_type": "ramp-up then steady-state",
+      "vus": 100,
+      "ramp_up_duration_s": 60,
+      "steady_state_duration_s": 300,
+      "think_time_s": [1, 2],
+      "payload_example": {
+        "username": "user_<uuid>",
+        "email": "user_<uuid>@example.com",
+        "password": "StrongP@ssword!"
+      }
+    },
+    "metrics": [
+      {
+        "metric": "Response Time (p95)",
+        "target": 500,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Error Rate",
+        "target": 1,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Throughput",
+        "target": 150,
+        "actual": null,
+        "unit": "requests/second"
+      },
+      {
+        "metric": "Concurrent Users",
+        "target": 100,
+        "actual": null,
+        "unit": "VUs"
+      }
+    ],
+    "test result": "Pending",
+    "notes": "A 60 s ramp-up period is a proposed default to prevent a thundering herd scenario at test start. Unique usernames and emails must be generated dynamically at runtime using UUID or epoch timestamp suffixes to satisfy the uniqueness precondition and avoid HTTP 409 Conflict errors inflating the error rate."
+  }
+]

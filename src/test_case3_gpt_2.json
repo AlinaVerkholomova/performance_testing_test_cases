@@ -1,0 +1,49 @@
+{
+  "name": "Modify User Preferences Performance Test",
+  "description": "Validate the performance and responsiveness of the partial update operation for user preferences when multiple users update their settings concurrently.",
+  "corresponding NFR": "NFR 3: Modify User Preferences (Partial Update)",
+  "preconditions": [
+    "User accounts must be pre-created and accessible.",
+    "Valid authentication tokens must be provided in the Authorization header.",
+    "Preferences functionality must be enabled in the application."
+  ],
+  "input data": {
+    "endpoint": "/api/v1/users/{user_id}/preferences",
+    "http method": "PATCH",
+    "path parameter": {
+      "user_id": "abc-123"
+    },
+    "type of load": "Concurrent load test simulating 50 PATCH operations",
+    "headers": {
+      "Authorization": "Bearer <token>"
+    },
+    "payload example": {
+      "email_notifications": false,
+      "language": "fr"
+    }
+  },
+  "metrics": [
+    {
+      "metric name": "Max Response Time",
+      "target value": "≤ 400 ms for 95% of requests",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Update Reflection",
+      "target value": "Changes visible via subsequent GET requests",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Error Rate",
+      "target value": "< 1%",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Concurrent Users",
+      "target value": "Simulate 50 concurrent PATCH operations",
+      "actual value": "Pending"
+    }
+  ],
+  "test result": "Pending",
+  "notes": "Ensure preference changes are verified through follow-up GET requests and distribute updates across test users to avoid conflicts."
+}

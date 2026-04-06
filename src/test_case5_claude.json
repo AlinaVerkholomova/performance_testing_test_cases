@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Delete User Account Load Test (Soft Delete via PATCH)",
+    "description": "Test the /api/v1/users/{user_id} endpoint under 50 concurrent virtual users performing PATCH operations to soft-delete (deactivate) user accounts for 5 minutes, validating max response time, success rate, and data integrity requirements for the user deactivation operation.",
+    "corresponding NFR": "The /api/v1/users/{user_id} endpoint must maintain a maximum response time of ≤ 500 ms, a success rate of ≥ 98%, and data integrity (deactivated users must not appear in the active users listing) under 50 concurrent PATCH deactivation operations.",
+    "preconditions": [
+      "The application is deployed and fully accessible in a stable test environment.",
+      "A pool of at least 50 unique test user accounts in active status is pre-created and restored from a snapshot before the test run.",
+      "None of the test users have pending transactions or dependencies that would block deactivation.",
+      "Valid Bearer authentication tokens are pre-generated for each virtual user and included in the Authorization header with a TTL exceeding the total test duration.",
+      "Each virtual user is mapped to a distinct user_id to prevent duplicate deactivation attempts on the same resource.",
+      "A data integrity verification step is scripted to confirm deactivated users do not appear in the active users listing post-execution."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/users/{user_id}",
+      "method": "PATCH",
+      "path_parameter": "user_id (drawn from pre-seeded active user pool)",
+      "load_type": "ramp-up then steady-state",
+      "vus": 50,
+      "ramp_up_duration_s": 30,
+      "steady_state_duration_s": 300,
+      "think_time_s": [1, 2],
+      "headers": {
+        "Authorization": "Bearer <token>",
+        "Content-Type": "application/json"
+      },
+      "payload_example": {
+        "status": "deactivated"
+      }
+    },
+    "metrics": [
+      {
+        "metric": "Max Response Time",
+        "target": 500,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Success Rate",
+        "target": 98,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Concurrent Users",
+        "target": 50,
+        "actual": null,
+        "unit": "concurrent PATCH operations"
+      },
+      {
+        "metric": "Data Integrity",
+        "target": 100,
+        "actual": null,
+        "unit": "% of deactivated users absent from active users listing"
+      }
+    ],
+    "test result": "Pending",
+    "notes": "Ramp-up duration of 30 s and steady-state duration of 300 s are proposed defaults. Because this is a destructive (non-idempotent) operation, the pre-seeded user pool must be fully restored between test iterations to maintain a valid active-user supply. Data integrity validation requires a post-test verification query or GET request confirming deactivated users are absent from the active users listing — this must be implemented as a post-test assertion in the test script. Bearer tokens must be pre-generated with a TTL greater than total test duration (ramp-up + steady-state = 330 s minimum)."
+  }
+]

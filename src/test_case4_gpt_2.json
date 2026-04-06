@@ -1,0 +1,46 @@
+{
+  "name": "Retrieve Order History Performance Test",
+  "description": "Validate the performance of the order history read operation when retrieving filtered historical order data under load.",
+  "corresponding NFR": "NFR 4: Retrieve Order History (Read Operation)",
+  "preconditions": [
+    "Users must have historical order data.",
+    "The selected time range must include existing orders.",
+    "The API is read-only; either no authentication is required or static tokens are used."
+  ],
+  "input data": {
+    "endpoint": "/api/v1/orders/history",
+    "http method": "POST",
+    "type of load": "Read-heavy performance test",
+    "authentication": "Not required or static token if applicable",
+    "payload example": {
+      "user_id": "user_789",
+      "start_date": "2024-01-01",
+      "end_date": "2024-12-31",
+      "status": "completed"
+    }
+  },
+  "metrics": [
+    {
+      "metric name": "Avg Response Time",
+      "target value": "≤ 300 ms",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "P95 Latency",
+      "target value": "≤ 600 ms",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Error Rate",
+      "target value": "< 0.5%",
+      "actual value": "Pending"
+    },
+    {
+      "metric name": "Throughput",
+      "target value": "≥ 100 requests/sec",
+      "actual value": "Pending"
+    }
+  ],
+  "test result": "Pending",
+  "notes": "Use representative historical datasets and realistic filter ranges. Consider testing cached and uncached scenarios separately if relevant."
+}

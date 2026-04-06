@@ -1,0 +1,58 @@
+[
+  {
+    "name": "User Registration Performance Test — /api/v1/users/register",
+    "description": "Validate the User Registration endpoint performance under concurrent load, ensuring p95 response time, error rate, and throughput meet NFR targets while simulating up to 100 concurrent users.",
+    "corresponding NFR": "NFR 1: User Registration (Create Operation) — POST /api/v1/users/register must achieve p95 ≤ 500 ms, error rate < 1%, throughput ≥ 150 requests/sec, while simulating up to 100 concurrent users.",
+    "preconditions": [
+      "The email and username must be unique per test run (append timestamp or use random data).",
+      "Authentication is not required for this endpoint.",
+      "Application must be in a clean state (avoid email duplication)."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/users/register",
+      "method": "POST",
+      "load_type": "static",
+      "vus": 100,
+      "duration_s": 300,
+      "think_time_s": [
+        1,
+        3
+      ],
+      "max_vus": 100,
+      "payload_example": {
+        "username": "test_user123",
+        "email": "test123@example.com",
+        "password": "StrongP@ssword!"
+      },
+      "payload_uniqueness_rule": "Append timestamp or random suffix to username and email per iteration/user to ensure uniqueness."
+    },
+    "metrics": [
+      {
+        "metric": "Max Response Time",
+        "target": 500,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Error Rate",
+        "target": 1,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Throughput",
+        "target": 150,
+        "actual": null,
+        "unit": "requests/sec"
+      },
+      {
+        "metric": "Concurrent Users",
+        "target": 100,
+        "actual": null,
+        "unit": "users"
+      }
+    ],
+    "test result": "TBD",
+    "notes": "Defaults applied where required to complete input data: duration_s=300 (steady run) and think_time_s=[1,3]. Ensure unique username/email per request to prevent duplicate-registration errors from inflating error rate."
+  }
+]

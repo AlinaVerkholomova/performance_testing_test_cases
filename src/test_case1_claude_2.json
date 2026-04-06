@@ -1,0 +1,46 @@
+{
+  "name": "TC-NFR-001: User Registration Performance Test",
+  "description": "Verify that the user registration endpoint (/api/v1/users/register) meets performance requirements under simulated concurrent load of up to 100 users.",
+  "corresponding_NFR": "NFR-1: User Registration (Create Operation) — response time ≤ 500 ms at 95th percentile, error rate < 1%, throughput ≥ 150 req/sec.",
+  "preconditions": [
+    "Email and username must be unique per test run (use timestamp or random data).",
+    "Authentication is not required for this endpoint.",
+    "Application must be in a clean state (avoid email duplication)."
+  ],
+  "input_data": {
+    "endpoint": "/api/v1/users/register",
+    "http_method": "POST",
+    "load_type": "Ramp-up to 100 concurrent users",
+    "duration": "5 minutes",
+    "payload_example": {
+      "username": "test_user123",
+      "email": "test123@example.com",
+      "password": "StrongP@ssword!"
+    },
+    "notes": "Use unique username/email values per request (e.g., append timestamp)."
+  },
+  "metrics": [
+    {
+      "metric_name": "Max Response Time (P95)",
+      "target_value": "≤ 500 ms",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Error Rate",
+      "target_value": "< 1%",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Throughput",
+      "target_value": "≥ 150 requests/sec",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Concurrent Users",
+      "target_value": "Up to 100 users",
+      "actual_value": null
+    }
+  ],
+  "test_result": "PASS / FAIL (fill in after execution)",
+  "notes": "Use a data parameterization strategy (e.g., CSV feed or timestamp suffix) to avoid duplicate email/username conflicts. Monitor server logs for any 4xx/5xx errors during the run."
+}

@@ -1,0 +1,50 @@
+{
+  "name": "TC-NFR-002: Update Product Details Performance Test (Full Replace)",
+  "description": "Verify that the product update endpoint (/api/v1/products/{product_id}) meets performance requirements when processing concurrent PUT requests that fully replace product records.",
+  "corresponding_NFR": "NFR-2: Update Product Details (Full Replace) — max response time ≤ 700 ms at 90th percentile, data consistency ensured on subsequent GETs, error rate < 1%, 30 concurrent PUT operations supported.",
+  "preconditions": [
+    "Product IDs used during testing must already exist in the database.",
+    "A test database snapshot with known product IDs should be prepared.",
+    "A valid authentication token (Authorization: Bearer <token>) must be included in all request headers."
+  ],
+  "input_data": {
+    "endpoint": "/api/v1/products/{product_id}",
+    "http_method": "PUT",
+    "path_parameter": "product_id (e.g., 12345)",
+    "load_type": "30 concurrent PUT operations",
+    "headers": {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+    },
+    "payload_example": {
+      "name": "Wireless Headphones",
+      "description": "Noise-cancelling over-ear headphones",
+      "price": 79.99,
+      "stock": 50
+    }
+  },
+  "metrics": [
+    {
+      "metric_name": "Max Response Time (P90)",
+      "target_value": "≤ 700 ms",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Data Consistency",
+      "target_value": "Updates reflect in subsequent GETs",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Error Rate",
+      "target_value": "< 1%",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Concurrent Updates",
+      "target_value": "30 concurrent PUT operations",
+      "actual_value": null
+    }
+  ],
+  "test_result": "PASS / FAIL (fill in after execution)",
+  "notes": "Ensure product IDs are pre-seeded and not shared across concurrent threads to avoid lock contention. After each PUT, issue a GET to validate data consistency. Monitor for optimistic lock errors or stale data responses."
+}
