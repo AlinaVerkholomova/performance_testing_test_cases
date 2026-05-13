@@ -1,0 +1,48 @@
+{
+  "name": "TC_NFR5 – Soft Delete User Account",
+  "description": "Verify that the soft-delete operation PATCH /api/v1/users/{user_id} meets all defined performance requirements when 50 concurrent users submit simultaneous account deactivation requests.",
+  "corresponding_NFR": "NFR 5 – Delete User Account (Write/Delete Operation)",
+  "preconditions": [
+    "Test users must exist and be in \"active\" status.",
+    "A valid authorisation token must be available for each request.",
+    "Users must not have pending transactions that prevent deactivation."
+  ],
+  "input_data": {
+    "endpoint": "/api/v1/users/{user_id}",
+    "http_method": "PATCH",
+    "operation": "Soft delete via status update",
+    "path_parameter": "user_id",
+    "payload_example": {
+      "status": "deactivated"
+    },
+    "load_type": "Concurrent – 50 simultaneous virtual users",
+    "tool": "Apache JMeter"
+  },
+  "metrics": [
+    {
+      "metric_name": "Max Response Time",
+      "target_value": "≤ 500 ms",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Success Rate",
+      "target_value": "≥ 98%",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Concurrent Users",
+      "target_value": "50 simultaneous deactivation requests",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Data Integrity",
+      "target_value": "Deactivated users must not appear in GET /api/v1/users/active",
+      "actual_value": null
+    }
+  ],
+  "test_result": null,
+  "notes": [
+    "Post-test: confirm deactivated users do NOT appear in GET /api/v1/users/active.",
+    "Each JMeter thread must carry a valid bearer token before sending the PATCH request."
+  ]
+}

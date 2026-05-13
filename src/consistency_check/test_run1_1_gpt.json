@@ -1,0 +1,52 @@
+[
+  {
+    "name": "FR 5 — Delete User Account (Soft Deactivate) — 50 Concurrent Users",
+    "description": "Validate performance and correctness of soft-deleting (deactivating) users via PATCH /api/v1/users/{user_id} under 50 concurrent deactivations, ensuring response time and success rate targets are met and that deactivated users no longer appear in the active-users listing.",
+    "corresponding NFR": "Under 50 concurrent deactivations, Max Response Time \u2264 500 ms, Success Rate \u2265 98%, and Data Integrity: deactivated users must not appear in /users/active.",
+    "preconditions": [
+      "Test users must exist and be in \"active\" status.",
+      "Authorization is required.",
+      "Users should not have pending transactions that prevent deletion."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/users/{user_id}",
+      "http method": "PATCH",
+      "operation": "soft delete by status update",
+      "path parameter": "user_id",
+      "payload": {
+        "status": "deactivated"
+      },
+      "type of load": "concurrent",
+      "concurrent users": 50,
+      "duration_s": 300,
+      "think time_s": [
+        1,
+        3
+      ]
+    },
+    "metrics": [
+      {
+        "metric": "Max Response Time",
+        "target": "\u2264 500 ms",
+        "actual": null
+      },
+      {
+        "metric": "Success Rate",
+        "target": "\u2265 98%",
+        "actual": null
+      },
+      {
+        "metric": "Concurrent Users",
+        "target": "Simulate 50 concurrent deactivations",
+        "actual": null
+      },
+      {
+        "metric": "Data Integrity",
+        "target": "Deactivated users must not appear in /users/active",
+        "actual": null
+      }
+    ],
+    "test result": "Not executed (actual values pending run).",
+    "notes": "Defaults used only where INPUT did not specify: duration_s=300 and think time_s=[1,3]. Data integrity validation requires verifying deactivated users are not returned by /users/active."
+  }
+]

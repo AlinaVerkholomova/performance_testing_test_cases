@@ -1,0 +1,45 @@
+{
+  "name": "NFR 5 – Delete User Account (Soft Delete / Deactivation)",
+  "description": "Verify that the soft-delete endpoint PATCH /api/v1/users/{user_id} meets performance requirements when 50 concurrent users send deactivation requests.",
+  "corresponding_NFR": "NFR 5 – Delete User Account (Write/Delete Operation)",
+  "preconditions": [
+    "Test users must exist and be in 'active' status.",
+    "Authorization is required (valid token must be provided for each request).",
+    "Users must not have pending transactions that prevent deletion."
+  ],
+  "input_data": {
+    "endpoint": "/api/v1/users/{user_id}",
+    "http_method": "PATCH",
+    "path_parameter": "user_id",
+    "payload_example": {
+      "status": "deactivated"
+    },
+    "load_type": "Concurrent Load",
+    "concurrent_users": 50,
+    "tool": "Apache JMeter"
+  },
+  "metrics": [
+    {
+      "metric_name": "Max Response Time",
+      "target_value": "≤ 500 ms",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Success Rate",
+      "target_value": "≥ 98%",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Concurrent Users",
+      "target_value": "50 concurrent deactivations",
+      "actual_value": null
+    },
+    {
+      "metric_name": "Data Integrity",
+      "target_value": "Deactivated users must not appear in GET /users/active",
+      "actual_value": null
+    }
+  ],
+  "test_result": null,
+  "notes": "Post-test verification required: deactivated users must not appear in GET /users/active. Authorization header required for every request."
+}

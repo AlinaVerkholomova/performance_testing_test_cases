@@ -1,0 +1,58 @@
+[
+  {
+    "name": "TC-NFR-05: Delete User Account — Soft Delete Load Test",
+    "description": "Validate that the PATCH /api/v1/users/{user_id} endpoint correctly processes 50 concurrent soft-delete requests (status update to deactivated) within the defined response time and success rate thresholds, and that deactivated users no longer appear in the active users listing.",
+    "corresponding NFR": "The /api/v1/users/{user_id} PATCH endpoint must handle 50 simultaneous soft-delete requests with a maximum response time of 500 ms and a success rate of 98% or above. Following deactivation, affected users must not be retrievable via GET /users/active (data integrity constraint).",
+    "preconditions": [
+      "At least 50 test users exist in the database with status: active.",
+      "Each test user has a unique user_id pre-loaded in a parameterisation CSV file.",
+      "Valid Bearer authorization tokens are provisioned for all 50 test users.",
+      "No test user has pending transactions that would block deactivation.",
+      "Application and database services are running and accessible.",
+      "Test environment is isolated from production traffic."
+    ],
+    "input data": {
+      "endpoint": "/api/v1/users/{user_id}",
+      "method": "PATCH",
+      "path_parameter": "user_id",
+      "payload": {
+        "status": "deactivated"
+      },
+      "content_type": "application/json",
+      "load_type": "static",
+      "vus": 50,
+      "duration_s": 300,
+      "ramp_up_s": 30,
+      "think_time_s": [1, 3],
+      "auth": "Bearer token per user, CSV-parameterised"
+    },
+    "metrics": [
+      {
+        "metric": "Max Response Time",
+        "target": 500,
+        "actual": null,
+        "unit": "ms"
+      },
+      {
+        "metric": "Success Rate",
+        "target": 98,
+        "actual": null,
+        "unit": "%"
+      },
+      {
+        "metric": "Concurrent Users",
+        "target": 50,
+        "actual": null,
+        "unit": "VUs"
+      },
+      {
+        "metric": "Data Integrity — deactivated users absent from /users/active",
+        "target": 100,
+        "actual": null,
+        "unit": "%"
+      }
+    ],
+    "test result": null,
+    "notes": "Duration of 300 s and ramp-up of 30 s are proposed defaults — adjust per test plan. Each VU must consume a unique user_id and token pair from CSV to prevent duplicate-deactivation conflicts. A dedicated post-test assertion step must query /users/active and confirm zero deactivated IDs are present (data integrity gate)."
+  }
+]
